@@ -45,7 +45,8 @@ EmuThread::~EmuThread()
 void EmuThread::resume()
 {
 	m_running = true;
-	start();
+    start(QThread::TimeCriticalPriority);
+    //start();
 }
 
 /*! Pauses the execution of the emulation. */
@@ -66,6 +67,9 @@ static void sleepMs(uint msecs)
 /*! \internal */
 void EmuThread::run()
 {
+    QTime emulateFrameBenchmark;
+    emulateFrameBenchmark.start();
+
 	// resume the emulation
 	m_emu->setRunning(true);
 	qreal frameTime = 1000.0 / m_emu->frameRate();
@@ -76,26 +80,29 @@ void EmuThread::run()
 	while (m_running) {
 		qreal currentTime = time.elapsed();
 		currentFrameTime += frameTime;
-		if (currentTime < currentFrameTime && frameCounter == 0) {
-            QTime emulateFrameBenchmark;
-            emulateFrameBenchmark.start();
+//        if (currentTime < currentFrameTime && frameCounter == 0) {
+        if (frameCounter == 0) {
+            //qDebug("%dms since last frame", emulateFrameBenchmark.elapsed());
+            QTime tempTime;
+            tempTime.start();
 			m_emu->emulateFrame(true);
-            qDebug("frame took %dms", emulateFrameBenchmark.elapsed());
+            qDebug("%dms to render frame", tempTime.elapsed());
+            emulateFrameBenchmark.restart();
 			m_inFrameGenerated = true;
 			emit frameGenerated(true);
 			m_inFrameGenerated = false;
 
-			qreal currentTime = time.addMSecs(5).elapsed();
-			if (currentTime < currentFrameTime)
-				sleepMs(qFloor(currentFrameTime - currentTime));
+//            qreal currentTime = time.addMSecs(5).elapsed();
+//            if (currentTime < currentFrameTime)
+//                sleepMs(qFloor(currentFrameTime - currentTime));
 		} else {
 			m_emu->emulateFrame(false);
 			emit frameGenerated(false);
 
 			if (frameCounter != 0) {
-				qreal currentTime = time.addMSecs(5).elapsed();
-				if (currentTime < currentFrameTime)
-					sleepMs(qFloor(currentFrameTime - currentTime));
+                qreal currentTime = time.addMSecs(5).elapsed();
+                if (currentTime < currentFrameTime)
+                    sleepMs(qFloor(currentFrameTime - currentTime));
 			} else {
 				currentFrameTime = 0;
 				time.restart();

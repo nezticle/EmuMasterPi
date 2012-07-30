@@ -28,6 +28,7 @@ class HostInputDevice;
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
 #include <QtCore/QStringList>
+#include <QtCore/QTime>
 class QThread;
 class QSettings;
 
@@ -88,13 +89,14 @@ signals:
 
 private slots:
 	void pause();
-	void pauseStage2();
+    //void pauseStage2();
 	void resume();
 	void onFrameGenerated(bool videoOn);
 	void onSlFailed();
 	void onSafetyEvent();
 	void onStateLoaded();
 	void hostVideoShaderChanged();
+    void update();
 private:
 	bool loadConfiguration();
 	void finishSetupConfiguration();
@@ -109,7 +111,6 @@ private:
 	Emu *m_emu;
 	QString m_diskFileName;
 
-	EmuThread *m_thread;
 	HostInput *m_hostInput;
 	HostAudio *m_hostAudio;
 	HostVideo *m_hostVideo;
@@ -128,9 +129,12 @@ private:
 
 	bool m_safetyCheck;
 	QTimer *m_safetyTimer;
+    QTimer m_updateTimer;
 	bool m_safetyTimerDisabled;
 	bool m_runInBackground;
 	bool m_lrButtonsVisible;
+    int m_frameSkip;
+    QTime m_frameTime;
 };
 
 inline QString EmuView::error() const

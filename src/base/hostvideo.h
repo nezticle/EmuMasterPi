@@ -17,7 +17,6 @@
 #define HOSTVIDEO_H
 
 class Emu;
-class EmuThread;
 class HostInput;
 #include "base_global.h"
 #include <QtGui/QWindow>
@@ -37,8 +36,7 @@ public:
     static const int Height;
 
     explicit HostVideo(HostInput *hostInput,
-                       Emu *emu,
-                       EmuThread *thread);
+                       Emu *emu);
 	~HostVideo();
 
 	bool isFpsVisible() const;
@@ -74,7 +72,6 @@ private:
 
 	HostInput *m_hostInput;
 	Emu *m_emu;
-	EmuThread *m_thread;
 
 	QRectF m_srcRect;
 	QRectF m_dstRect;

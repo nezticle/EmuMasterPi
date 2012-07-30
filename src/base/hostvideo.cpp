@@ -79,12 +79,10 @@ static const char *defaultFragmentShader =
 	screen. Above the frame buttons are rendered by the given \a hostInput.
  */
 HostVideo::HostVideo(HostInput *hostInput,
-                     Emu *emu,
-                     EmuThread *thread) :
+                     Emu *emu) :
     QWindow(),
 	m_hostInput(hostInput),
 	m_emu(emu),
-	m_thread(thread),
 	m_program(0),
     m_programIndex(0),
 	m_programDirty(true),
@@ -324,9 +322,6 @@ QStringList HostVideo::shaderList() const
 
 void HostVideo::repaint()
 {
-    if (!m_thread->m_inFrameGenerated)
-        return;
-
     if (m_programDirty) {
         if (!loadShaderProgram())
             return;

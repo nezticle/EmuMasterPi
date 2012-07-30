@@ -20,7 +20,6 @@
 #include "hostvideo.h"
 #include "hostaudio.h"
 #include "hostinput.h"
-#include "stateimageprovider.h"
 #include "statelistmodel.h"
 #include "pathmanager.h"
 #include "hostinputdevice.h"
@@ -45,17 +44,17 @@ EmuView::EmuView(Emu *emu, const QString &diskFileName) :
 	m_autoSaveLoadEnable(true),
 	m_safetyTimerDisabled(false),
 	m_runInBackground(false),
-	m_lrButtonsVisible(false)
+    m_lrButtonsVisible(false),
+    m_frameSkip(0)
 {
 	Q_ASSERT(m_emu != 0);
 
 	Configuration::setupAppInfo();
 	pathManager.setCurrentEmu(m_emu->name());
 
-	m_thread = new EmuThread(m_emu);
 	m_hostInput = new HostInput(m_emu);
 	m_hostAudio = new HostAudio(m_emu);
-	m_hostVideo = new HostVideo(m_hostInput, m_emu, m_thread);
+    m_hostVideo = new HostVideo(m_hostInput, m_emu);
 	m_hostVideo->resize(HostVideo::Width, HostVideo::Height);
 	m_hostVideo->installEventFilter(m_hostInput);
 	QObject::connect(m_hostInput, SIGNAL(quit()), SLOT(close()));
@@ -86,14 +85,11 @@ EmuView::EmuView(Emu *emu, const QString &diskFileName) :
 	m_safetyTimer->setSingleShot(false);
 	QObject::connect(m_safetyTimer, SIGNAL(timeout()), SLOT(onSafetyEvent()));
 
+    m_updateTimer.setInterval(m_emu->frameRate());
+    m_frameTime.start();
+    connect(&m_updateTimer, SIGNAL(timeout()), SLOT(update()));
+
 	const char *method = "showEmulationView";
-	// if (m_error.isEmpty()) {
-	// 	QObject::connect(m_stateListModel, SIGNAL(slFailed()),
-	// 					 SLOT(onSlFailed()), Qt::QueuedConnection);
-	// 	QObject::connect(m_stateListModel, SIGNAL(stateLoaded()),
-	// 					 SLOT(onStateLoaded()), Qt::QueuedConnection);
-	// 	method = "showSettingsView";
-	// }
 	QMetaObject::invokeMethod(this, method, Qt::QueuedConnection);
 }
 
@@ -106,7 +102,6 @@ EmuView::~EmuView()
 		saveScreenShotIfNotExists();
 		m_emu->shutdown();
 	}
-	delete m_thread;
 	delete m_stateListModel;
 	delete m_hostVideo;
 	delete m_hostAudio;
@@ -119,44 +114,11 @@ void EmuView::pause()
 	if (!m_running || m_pauseRequested)
 		return;
 	m_closeTries = 0;
-	m_pauseRequested = true;
+    m_running = false;
+    m_updateTimer.stop();
+    m_emu->setRunning(false);
 
 	m_safetyTimer->stop();
-	QObject::disconnect(m_thread, SIGNAL(frameGenerated(bool)),
-						this, SLOT(onFrameGenerated(bool)));
-	m_thread->pause();
-	QMetaObject::invokeMethod(this, "pauseStage2", Qt::QueuedConnection);
-}
-
-void EmuView::pauseStage2()
-{
-	// the code below may be seen as bloat but it is needed
-	// we are waiting for the thread to exit, but at the same
-	// we allow blocking queued repaints from the thread
-	if (m_thread->isRunning()) {
-		m_closeTries++;
-		if (m_closeTries > 40) {
-			m_thread->terminate();
-			m_error = tr("Emulated system is not responding.");
-		} else {
-			QTimer::singleShot(10, this, SLOT(pauseStage2()));
-			return;
-		}
-	}
-	m_pauseRequested = false;
-	m_running = false;
-
-	if (m_quit) {
-		close();
-		return;
-	}
-	if (m_slotToBeLoadedOnStart != StateListModel::InvalidSlot && m_error.isEmpty()) {
-		if (m_stateListModel->loadState(m_slotToBeLoadedOnStart)) {
-			m_slotToBeLoadedOnStart = StateListModel::InvalidSlot;
-			resume();
-		}
-		return;
-	}
 }
 
 void EmuView::resume()
@@ -170,20 +132,16 @@ void EmuView::resume()
 	if (m_running)
 		return;
 
-	QObject::connect(m_thread, SIGNAL(frameGenerated(bool)),
-					 this, SLOT(onFrameGenerated(bool)),
-					 Qt::BlockingQueuedConnection);
-
 	if (!m_safetyTimerDisabled) {
 		m_safetyCheck = false;
 		m_safetyTimer->start();
 	}
 
-	m_thread->resume();
-
 	if (m_slotToBeLoadedOnStart != StateListModel::InvalidSlot)
 		QTimer::singleShot(1000, this, SLOT(pause()));
 
+    m_updateTimer.start();
+    m_emu->setRunning(true);
 	m_running = true;
 }
 
@@ -253,13 +211,25 @@ void EmuView::parseConfArg(const QString &arg)
 
 void EmuView::onFrameGenerated(bool videoOn)
 {
+    QTime benchmarkTime;
+    benchmarkTime.start();
+    m_emu->emulateFrame(videoOn);
+    qDebug("%dms to render frame", benchmarkTime.elapsed());
+    benchmarkTime.restart();
 	m_safetyCheck = true;
-	if (m_audioEnable)
+    if (m_audioEnable) {
 		m_hostAudio->sendFrame();
-	if (videoOn)
+        qDebug("%dms to process audio", benchmarkTime.elapsed());
+        benchmarkTime.restart();
+    }
+    if (videoOn) {
 		m_hostVideo->repaint();
+        qDebug("%dms to paint to screen", benchmarkTime.elapsed());
+        benchmarkTime.restart();
+    }
 	// sync input with the emulation
 	m_hostInput->sync();
+    qDebug("%dms to process input", benchmarkTime.elapsed());
 }
 
 int EmuView::determineLoadSlot(const QStringList &args)
@@ -360,7 +330,6 @@ QList<QObject *> EmuView::inputDevices() const
 void EmuView::onSafetyEvent()
 {
 	if (!m_safetyCheck) {
-		m_thread->terminate();
 		fatalError(tr("Emulated system is not responding"));
 	}
 	m_safetyCheck = false;
@@ -377,7 +346,6 @@ void EmuView::onStateLoaded()
 void EmuView::finishSetupConfiguration()
 {
 	QSettings s;
-	m_thread->setFrameSkip(loadOptionFromSettings(s, "frameSkip").toInt());
 	m_hostVideo->setFpsVisible(loadOptionFromSettings(s, "fpsVisible").toBool());
 	m_hostVideo->setKeepAspectRatio(loadOptionFromSettings(s, "keepAspectRatio").toBool());
     m_hostVideo->setShader(loadOptionFromSettings(s, "videoFilter").toString());
@@ -411,16 +379,14 @@ bool EmuView::isFpsVisible() const
 
 void EmuView::setFrameSkip(int n)
 {
-	if (m_thread->frameSkip() != n) {
-		m_thread->setFrameSkip(n);
-		emConf.setValue("frameSkip", n);
-		emit frameSkipChanged();
-	}
+    m_frameSkip = n;
+    emConf.setValue("frameSkip", n);
+    emit frameSkipChanged();
 }
 
 int EmuView::frameSkip() const
 {
-	return m_thread->frameSkip();
+    return m_frameSkip;
 }
 
 void EmuView::setAudioEnabled(bool on)
@@ -492,5 +458,23 @@ void EmuView::disableSafetyTimer()
 void EmuView::hostVideoShaderChanged()
 {
 	emConf.setValue("videoFilter", m_hostVideo->shader());
-	emit videoFilterChanged();
+    emit videoFilterChanged();
+}
+
+void EmuView::update()
+{
+    static int frameCounter = 0;
+    qDebug("%dms since last frame", m_frameTime.elapsed());
+    //If not paused
+    if(!m_running)
+        return;
+    //If framecount < frameskip
+    QTime benchmarkTime;
+    benchmarkTime.start();
+    onFrameGenerated(frameCounter == 0);
+    qDebug("%dms to update", benchmarkTime.elapsed());
+
+    if (++frameCounter > m_frameSkip)
+        frameCounter = 0;
+    m_frameTime.restart();
 }
