@@ -94,6 +94,9 @@ public:
 	Q_INVOKABLE bool checkIdcodeForGroup(int groupIndex, const QString &expected) const;
 
 	void sl();
+
+    QHash<int,QByteArray> roleNames() const;
+
 private:
 	void reloadCheats();
 

@@ -1,16 +1,10 @@
 TEMPLATE = lib
-DESTDIR = ../../lib
+QT = core gui multimedia gamepad
+CONFIG += staticlib
 INCLUDEPATH += ..
-QT = core gui multimedia
-LIBS += -L../../lib -lBsquaskRenderer
+DESTDIR = ../../lib
 
-unix {
-    QMAKE_LFLAGS += -Wl,--rpath,/opt/emumaster/lib
-    target.path = /opt/emumaster/lib
-    INSTALLS += target
-}
-
-DEFINES += BASE_PROJECT BSQUASK_ENABLE_JOYSTICKS
+DEFINES += BASE_PROJECT
 
 HEADERS += \
     hostaudio.h \
@@ -49,22 +43,3 @@ SOURCES += \
     stringlistproxy.cpp \
     memutils.cpp \
     gamepadinputdevice.cpp
-
-unix {
-
-    shaders.path = /opt/emumaster/data/shader
-    shaders.files = \
-        ../../data/shader/hq2x.vsh \
-        ../../data/shader/hq2x.fsh \
-        ../../data/shader/hq4x.vsh \
-        ../../data/shader/hq4x.fsh \
-        ../../data/shader/2xSal.vsh \
-        ../../data/shader/2xSal.fsh \
-        ../../data/shader/grayScale.vsh \
-        ../../data/shader/grayScale.fsh \
-        ../../data/shader/sharpen.vsh \
-        ../../data/shader/sharpen.fsh \
-
-
-    INSTALLS += shaders
-}
