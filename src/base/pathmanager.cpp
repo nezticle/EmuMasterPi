@@ -31,9 +31,9 @@ PathManager::PathManager()
 	m_emus << "gba";
 	m_emus << "snes";
 
-	m_installationDirPath = "/opt/emumaster";
+    m_installationDirPath = "/opt/apps/emumaster";
 	m_userDataDirPath = QString("%1/.emumaster").arg(getenv("HOME"));
-	m_diskDirBase = QString("%1/MyDocs/emumaster").arg(getenv("HOME"));
+    m_diskDirBase = QString("%1/roms").arg(getenv("HOME"));
 }
 
 /*! Creates subdirs for every emulation in the given \a dir. */
@@ -57,9 +57,8 @@ void PathManager::buildLocalDirTree()
 	dir.cd("screenshot");	createEmusSubtree(dir); dir.cdUp();
 
 	dir = QDir(getenv("HOME"));
-	dir.cd("MyDocs");
-	dir.mkdir("emumaster");
-	dir.cd("emumaster");
+    dir.mkdir("roms");
+    dir.cd("roms");
 	dir.mkdir("covers");
 	createEmusSubtree(dir);
 }

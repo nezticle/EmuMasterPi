@@ -2814,9 +2814,9 @@ bool gbaMemLoadGamePack(const QString &fileName)
 	const char *titlePtr = (const char *)(gamepak_rom + 0xa0);
 	const char *codePtr = (const char *)(gamepak_rom + 0xac);
 	const char *makerPtr = (const char *)(gamepak_rom + 0xb0);
-	gbaGamePackTitle = QString::fromAscii(titlePtr, qstrnlen(titlePtr, 12));
-	gbaGamePackCode = QString::fromAscii(codePtr, qstrnlen(codePtr, 4));
-	gbaGamePackMaker = QString::fromAscii(makerPtr, qstrnlen(makerPtr, 2));
+    gbaGamePackTitle = QString::fromLocal8Bit(titlePtr, qstrnlen(titlePtr, 12));
+    gbaGamePackCode = QString::fromLocal8Bit(codePtr, qstrnlen(codePtr, 4));
+    gbaGamePackMaker = QString::fromLocal8Bit(makerPtr, qstrnlen(makerPtr, 2));
 
 	loadConfig();
 

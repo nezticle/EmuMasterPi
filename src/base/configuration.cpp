@@ -97,7 +97,7 @@ void Configuration::setupAppInfo()
 {
     QCoreApplication::setOrganizationName("nezticle");
     QCoreApplication::setOrganizationDomain("bsquask.com");
-    QCoreApplication::setApplicationName("PiEmu");
+    QCoreApplication::setApplicationName("emumaster");
 	// TODO change on every release
     QCoreApplication::setApplicationVersion("0.0.1");
 }

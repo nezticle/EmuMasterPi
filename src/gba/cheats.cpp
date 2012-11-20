@@ -411,11 +411,7 @@ GbaCheats gbaCheats;
 
 GbaCheats::GbaCheats()
 {
-	QHash<int, QByteArray> roles;
-	roles.insert(GroupRole, "codeList");
-	roles.insert(DescriptionRole, "codeDescription");
-	roles.insert(EnableRole, "codeEnabled");
-	setRoleNames(roles);
+
 }
 
 int GbaCheats::rowCount(const QModelIndex &parent) const
@@ -495,7 +491,16 @@ void GbaCheats::sl()
 	if (!emsl.save) {
 		reloadCheats();
 		endResetModel();
-	}
+    }
+}
+
+QHash<int, QByteArray> GbaCheats::roleNames() const
+{
+    QHash<int, QByteArray> roles;
+    roles.insert(GroupRole, "codeList");
+    roles.insert(DescriptionRole, "codeDescription");
+    roles.insert(EnableRole, "codeEnabled");
+    return roles;
 }
 
 void GbaCheats::reloadCheats()

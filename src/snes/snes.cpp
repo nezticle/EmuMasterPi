@@ -207,7 +207,7 @@ void _makepath(char *path, const char *, const char *dir, const char *fname,
 }
 
 QString SnesEmu::setDisk(const QString &path) {
-	if (!Memory.LoadROM(path.toAscii().constData()))
+    if (!Memory.LoadROM(path.toLocal8Bit().constData()))
 		return tr("Load disk failed.");
 	Memory.ROMFramesPerSecond = Settings.PAL ? 50 : 60;
 	setFrameRate(Memory.ROMFramesPerSecond);

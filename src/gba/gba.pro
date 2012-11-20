@@ -30,8 +30,8 @@ SOURCES += \
     spu.cpp \
     gpu.cpp
 
-unix {
-	game_config.path = /opt/emumaster/data
+linux-rasp-pi-g++{
+        game_config.path = /opt/apps/emumaster/data
 	game_config.files = gba_game_config.txt
 	INSTALLS += game_config
 }

@@ -80,7 +80,6 @@ void EmuThread::run()
             QTime emulateFrameBenchmark;
             emulateFrameBenchmark.start();
 			m_emu->emulateFrame(true);
-            qDebug("frame took %dms", emulateFrameBenchmark.elapsed());
 			m_inFrameGenerated = true;
 			emit frameGenerated(true);
 			m_inFrameGenerated = false;

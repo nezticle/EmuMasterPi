@@ -71,6 +71,7 @@ public:
 	QVariant data(const QModelIndex &index, int role) const;
 
 	void sl();
+    QHash<int,QByteArray> roleNames() const;
 	QList<GameGenieCode> enabledList() const;
 	Q_INVOKABLE void setEnabled(int i, bool on);
 	Q_INVOKABLE void addNew(const QString &code, const QString &description);

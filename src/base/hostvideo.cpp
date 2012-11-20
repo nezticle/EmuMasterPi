@@ -25,9 +25,6 @@
 #include <QtGui/QGuiApplication>
 #include <QtCore/QDebug>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
 struct QGLRect
 {
 	QGLRect(const QRectF &r)
@@ -144,7 +141,7 @@ void HostVideo::paintEmuFrame()
 	if (m_u_displaySizeLocation != -1) {
 		qreal w = m_dstRect.width() * textureSize.width() / m_srcRect.width();
 		qreal h = m_dstRect.height() * textureSize.height() / m_srcRect.height();
-        m_program->setUniform(m_u_displaySizeLocation, glm::vec2(w, h));
+        m_program->setUniformValue(m_u_displaySizeLocation, QVector2D(w, h));
 	}
 
     //Enable Vertex Attribute Arrays:
@@ -184,7 +181,7 @@ void HostVideo::paintEmuFrame()
     glDisableVertexAttribArray(m_a_vertexLocation);
     glDisableVertexAttribArray(m_a_texCoordLocation);
 
-    //if (m_fpsVisible) //Draw FPS to QImage, and draw that texture as well.
+    if (m_fpsVisible) //Draw FPS to QImage, and draw that texture as well.
         paintFps();
 }
 
@@ -206,17 +203,6 @@ void HostVideo::paintFps()
     {
         qWarning() << "fps: " << m_fpsCount;
     }
-
-
-
-//	// set font and draw fps
-//	QFont font = painter->font();
-//	font.setPointSize(12);
-//	painter->setFont(font);
-//	painter->setPen(Qt::red);
-//	painter->drawText(QRectF(80.0f, 0.0f, 100.0f, 60.0f),
-//					  Qt::AlignCenter,
-//					  QString("%1 FPS").arg(m_fpsCount));
 }
 
 /*! Sets if fps should be drawn (\a on=true) or not. */
@@ -378,30 +364,30 @@ bool HostVideo::configureShaderProgram(const char *vsh, const char *fsh)
 	if (m_program)
 		delete m_program;
 
-    m_program = new Bsquask::GLSLProgram;
-    if (!m_program->compileShaderFromString(vsh, GLSLShader::VERTEX)) {
+    m_program = new QOpenGLShaderProgram;
+    if (!m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vsh)) {
     	qDebug("Vertex shader failed to compile");
-    	qDebug("Log: %s", m_program->log().c_str());
+        qDebug(m_program->log().toLocal8Bit());
 		return false;
 	}
-    if (!m_program->compileShaderFromString(fsh, GLSLShader::FRAGMENT)) {
+    if (!m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fsh)) {
     	qDebug("Fragment shader failed to compile");
-        qDebug("Log: %s", m_program->log().c_str());
+        qDebug(m_program->log().toLocal8Bit());
 		return false;
 	}
     if (!m_program->link()) {
     	qDebug("Shader program failed to link");
-        qDebug("Log: %s", m_program->log().c_str());
+        qDebug(m_program->log().toLocal8Bit());
         return false;
     }
 
     m_program->bind();
 
 
-    m_a_vertexLocation = m_program->getAttributeLocation("a_vertex");
-    m_a_texCoordLocation = m_program->getAttributeLocation("a_texCoord");
-    m_u_pvmMatrixLocation = m_program->getUniformLocation("u_pvmMatrix");
-    m_s_textureLocation = m_program->getUniformLocation("s_texture");
+    m_a_vertexLocation = m_program->attributeLocation("a_vertex");
+    m_a_texCoordLocation = m_program->attributeLocation("a_texCoord");
+    m_u_pvmMatrixLocation = m_program->uniformLocation("u_pvmMatrix");
+    m_s_textureLocation = m_program->uniformLocation("s_texture");
 	if (m_a_vertexLocation < 0 ||
 		m_a_texCoordLocation < 0 ||
 		m_u_pvmMatrixLocation < 0 ||
@@ -409,13 +395,14 @@ bool HostVideo::configureShaderProgram(const char *vsh, const char *fsh)
 		qDebug("Location not found in the shader program.");
 		return false;
 	}
-    m_u_displaySizeLocation = m_program->getUniformLocation("u_displaySize");
+    m_u_displaySizeLocation = m_program->uniformLocation("u_displaySize");
 
-    m_program->setUniform(m_s_textureLocation, 0);
+    m_program->setUniformValue(m_s_textureLocation, 0);
 
-    glm::mat4 u_pvmMatrix;
-    u_pvmMatrix = glm::ortho<float>(0.0f, (float)Width, (float)Height, 0, -1.0f, 1.0f);
-    m_program->setUniform(m_u_pvmMatrixLocation, u_pvmMatrix);
+    QMatrix4x4 u_pvmMatrix;
+    u_pvmMatrix.ortho(QRectF(0.0f, 0.0f, (float)Width, (float)Height));
+
+    m_program->setUniformValue(m_u_pvmMatrixLocation, u_pvmMatrix);
     return true;
 }
 

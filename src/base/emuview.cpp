@@ -20,7 +20,6 @@
 #include "hostvideo.h"
 #include "hostaudio.h"
 #include "hostinput.h"
-#include "stateimageprovider.h"
 #include "statelistmodel.h"
 #include "pathmanager.h"
 #include "hostinputdevice.h"
@@ -87,13 +86,7 @@ EmuView::EmuView(Emu *emu, const QString &diskFileName) :
 	QObject::connect(m_safetyTimer, SIGNAL(timeout()), SLOT(onSafetyEvent()));
 
 	const char *method = "showEmulationView";
-	// if (m_error.isEmpty()) {
-	// 	QObject::connect(m_stateListModel, SIGNAL(slFailed()),
-	// 					 SLOT(onSlFailed()), Qt::QueuedConnection);
-	// 	QObject::connect(m_stateListModel, SIGNAL(stateLoaded()),
-	// 					 SLOT(onStateLoaded()), Qt::QueuedConnection);
-	// 	method = "showSettingsView";
-	// }
+
 	QMetaObject::invokeMethod(this, method, Qt::QueuedConnection);
 }
 

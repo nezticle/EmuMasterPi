@@ -24,13 +24,6 @@ StateListModel::StateListModel(Emu *emu, const QString &diskFileName) :
 	m_emu(emu),
 	m_screenShotUpdateCounter(0)
 {
-	// set role names
-	QHash<int, QByteArray> roles;
-	roles.insert(SlotRole, "slot");
-	roles.insert(DateTimeRole, "saveDateTime");
-	roles.insert(ScreenShotUpdateRole, "screenShotUpdate");
-	setRoleNames(roles);
-
 	// make path to a dir with states
 	QString diskTitle = QFileInfo(diskFileName).completeBaseName();
 	QString path = pathManager.stateDirPath(diskTitle);
@@ -83,7 +76,16 @@ QImage StateListModel::screenShot(int slot) const
 	s.setFloatingPointPrecision(QDataStream::SinglePrecision);
 	QImage screenShot;
 	s >> screenShot;
-	return screenShot;
+    return screenShot;
+}
+
+QHash<int, QByteArray> StateListModel::roleNames() const
+{
+    QHash<int, QByteArray> roles;
+    roles.insert(SlotRole, "slot");
+    roles.insert(DateTimeRole, "saveDateTime");
+    roles.insert(ScreenShotUpdateRole, "screenShotUpdate");
+    return roles;
 }
 
 bool StateListModel::saveState(int slot)

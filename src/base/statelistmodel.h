@@ -45,6 +45,7 @@ public:
 	int count() const;
 	QVariant data(const QModelIndex &index, int role) const;
 	QImage screenShot(int slot) const;
+    QHash<int,QByteArray> roleNames() const;
 
 	bool exists(int slot) const;
 

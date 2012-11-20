@@ -93,7 +93,7 @@ void HostInputDevice::setDeviceIndex(int index)
 
 void HostInputDevice::updateEmuFunction()
 {
-    qDebug("%s", m_confName.toAscii().constData());
+    qDebug("%s", m_confName.toLatin1().constData());
 	int conf = emConf.value(m_confName, -1).toInt();
 	if (conf >= 0)
 		setEmuFunction(conf);

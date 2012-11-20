@@ -22,11 +22,10 @@ class HostInput;
 #include "base_global.h"
 #include <QtGui/QWindow>
 #include <QtGui/QOpenGLContext>
+#include <QtGui/QOpenGLShaderProgram>
 #include <QtCore/QTime>
 
 #include <GLES2/gl2.h>
-#include <Bsquask/glslprogram.h>
-
 
 class BASE_EXPORT HostVideo : public QWindow
 {
@@ -87,7 +86,7 @@ private:
 	bool m_keepAspectRatio;
 
     QOpenGLContext *m_openglContext;
-    Bsquask::GLSLProgram *m_program;
+    QOpenGLShaderProgram *m_program;
 	int m_u_pvmMatrixLocation;
 	int m_u_displaySizeLocation;
 	int m_a_vertexLocation;

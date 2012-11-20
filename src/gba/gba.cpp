@@ -131,7 +131,7 @@ QString GbaEmu::loadBios()
 				"a860e8c0b6d573d191e4ec7db1b1e4f6\n"
 				"\n"
 				"When you do get it name it gba_bios.bin and put it "
-				"in the \"emumaster/gba\" directory.");
+                "in the \"roms/gba\" directory.");
 
 	} else if (!supported) {
 		return tr("You have an incorrect BIOS image.");
