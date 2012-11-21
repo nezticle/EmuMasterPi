@@ -31,7 +31,7 @@ class HostInputDevice;
 class QThread;
 class QSettings;
 
-class BASE_EXPORT EmuView : public QObject
+class EmuView : public QObject
 {
 	Q_OBJECT
 	Q_PROPERTY(bool fpsVisible READ isFpsVisible WRITE setFpsVisible NOTIFY fpsVisibleChanged)

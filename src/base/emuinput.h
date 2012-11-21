@@ -18,7 +18,7 @@
 
 #include "base_global.h"
 
-class BASE_EXPORT EmuPad
+class  EmuPad
 {
 public:
 	enum Button {
@@ -52,7 +52,7 @@ inline void EmuPad::setButtons(int buttons)
 inline int EmuPad::buttons() const
 { return m_buttons; }
 
-class BASE_EXPORT EmuKeyb
+class  EmuKeyb
 {
 public:
 	void enqueue(int key);
@@ -61,7 +61,7 @@ private:
 	int m_keys[4];
 };
 
-class BASE_EXPORT EmuMouse
+class  EmuMouse
 {
 public:
 	enum Buttons {
@@ -95,7 +95,7 @@ inline int EmuMouse::xRel() const
 inline int EmuMouse::yRel() const
 { return m_y; }
 
-class BASE_EXPORT EmuTouch
+class EmuTouch
 {
 public:
 	void setPos(int x, int y);
@@ -114,7 +114,7 @@ inline int EmuTouch::x() const
 inline int EmuTouch::y() const
 { return m_y-1; }
 
-class BASE_EXPORT EmuInput
+class EmuInput
 {
 public:
 	EmuPad pad[2];

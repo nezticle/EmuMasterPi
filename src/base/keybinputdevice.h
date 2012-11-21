@@ -19,7 +19,7 @@
 #include "hostinputdevice.h"
 #include <QtCore/QHash>
 
-class BASE_EXPORT KeybInputDevice : public HostInputDevice
+class KeybInputDevice : public HostInputDevice
 {
 	Q_OBJECT
 public:

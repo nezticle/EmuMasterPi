@@ -28,7 +28,7 @@
 #include <QtGamepad/QGamepadManager>
 #include <QtGamepad/QGamepadInputState>
 
-class BASE_EXPORT GamepadInputDevice : public HostInputDevice
+class GamepadInputDevice : public HostInputDevice
 {
     Q_OBJECT
 public:

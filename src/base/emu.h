@@ -58,7 +58,7 @@ static const int GB = KB * KB * KB;
 
 #define UNREACHABLE() Q_ASSERT(false)
 
-class BASE_EXPORT Emu : public QObject
+class Emu : public QObject
 {
 	Q_OBJECT
 	Q_PROPERTY(QString name READ name CONSTANT)
@@ -134,7 +134,7 @@ inline const EmuInput *Emu::input() const
 
 // emumaster save/load functionality
 
-class BASE_EXPORT EMSL
+class  EMSL
 {
 public:
 	void begin(const QString &groupName);
@@ -164,7 +164,7 @@ private:
 	QList<QString> groupStack;
 };
 
-BASE_EXPORT extern EMSL emsl;
+ extern EMSL emsl;
 
 template <typename T>
 inline void EMSL::var(const QString &name, T &t)

@@ -22,7 +22,7 @@ class KeybInputDevice;
 #include "base_global.h"
 #include <QtCore/QObject>
 
-class BASE_EXPORT HostInput : public QObject
+class HostInput : public QObject
 {
 	Q_OBJECT
 public:
