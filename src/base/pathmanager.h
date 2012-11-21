@@ -20,7 +20,7 @@
 #include <QtCore/QStringList>
 class QDir;
 
-class BASE_EXPORT PathManager
+class  PathManager
 {
 public:
 	PathManager();
@@ -64,6 +64,6 @@ inline QString PathManager::installationDirPath() const
 inline QString PathManager::userDataDirPath() const
 { return m_userDataDirPath; }
 
-BASE_EXPORT extern PathManager pathManager;
+ extern PathManager pathManager;
 
 #endif // PATHMANAGER_H

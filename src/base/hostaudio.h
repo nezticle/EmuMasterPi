@@ -24,7 +24,7 @@ class Emu;
 #include <QtMultimedia/QAudioOutput>
 #include <QtMultimedia/qaudio.h>
 
-class BASE_EXPORT HostAudio : public QObject
+class HostAudio : public QObject
 {
 	Q_OBJECT
 public:

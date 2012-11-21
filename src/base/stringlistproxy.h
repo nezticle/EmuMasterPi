@@ -19,7 +19,7 @@
 #include "base_global.h"
 #include <QtCore/QStringListModel>
 
-class BASE_EXPORT StringListProxy : public QStringListModel
+class  StringListProxy : public QStringListModel
 {
 	Q_OBJECT
 	Q_PROPERTY(QStringList stringListModel READ stringList WRITE setStringList NOTIFY stringListChanged)

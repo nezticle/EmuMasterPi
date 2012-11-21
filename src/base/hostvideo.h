@@ -26,7 +26,7 @@ class HostInput;
 
 #include <GLES2/gl2.h>
 
-class BASE_EXPORT HostVideo : public QWindow
+class HostVideo : public QWindow
 {
     Q_OBJECT
 

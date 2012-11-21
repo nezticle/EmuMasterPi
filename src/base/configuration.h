@@ -20,7 +20,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
 
-class BASE_EXPORT Configuration
+class Configuration
 {
 public:
 	static void setupAppInfo();
@@ -39,6 +39,6 @@ private:
 	QHash<QString, QVariant> m_defaultData;
 };
 
-BASE_EXPORT extern Configuration emConf;
+ extern Configuration emConf;
 
 #endif // CONFIGURATION_H
