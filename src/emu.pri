@@ -14,7 +14,6 @@ HEADERS += \
     ../base/keybinputdevice.h \
     ../base/crc32.h \
     ../base/emuview.h \
-    ../base/emuthread.h \
     ../base/emu.h \
     ../base/emuinput.h \
     ../base/stringlistproxy.h \
@@ -33,7 +32,6 @@ SOURCES += \
     ../base/keybinputdevice.cpp \
     ../base/crc32.cpp \
     ../base/emuview.cpp \
-    ../base/emuthread.cpp \
     ../base/emu.cpp \
     ../base/emuinput.cpp \
     ../base/stringlistproxy.cpp \

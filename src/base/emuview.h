@@ -17,7 +17,6 @@
 #define EMUVIEW_H
 
 class Emu;
-class EmuThread;
 class HostVideo;
 class HostAudio;
 class HostInput;

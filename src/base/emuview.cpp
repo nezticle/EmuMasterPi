@@ -85,7 +85,10 @@ EmuView::EmuView(Emu *emu, const QString &diskFileName) :
 	m_safetyTimer->setSingleShot(false);
 	QObject::connect(m_safetyTimer, SIGNAL(timeout()), SLOT(onSafetyEvent()));
 
-    m_updateTimer.setInterval(m_emu->frameRate());
+    if (m_emu->frameRate())
+        m_updateTimer.setInterval(1000 / m_emu->frameRate());
+    else
+        m_updateTimer.setInterval(16);
     m_frameTime.start();
     connect(&m_updateTimer, SIGNAL(timeout()), SLOT(update()));
 
@@ -214,22 +217,22 @@ void EmuView::onFrameGenerated(bool videoOn)
     QTime benchmarkTime;
     benchmarkTime.start();
     m_emu->emulateFrame(videoOn);
-    qDebug("%dms to render frame", benchmarkTime.elapsed());
+    //qDebug("%dms to render frame", benchmarkTime.elapsed());
     benchmarkTime.restart();
 	m_safetyCheck = true;
     if (m_audioEnable) {
 		m_hostAudio->sendFrame();
-        qDebug("%dms to process audio", benchmarkTime.elapsed());
+   //     qDebug("%dms to process audio", benchmarkTime.elapsed());
         benchmarkTime.restart();
     }
     if (videoOn) {
-		m_hostVideo->repaint();
-        qDebug("%dms to paint to screen", benchmarkTime.elapsed());
+        m_hostVideo->repaint();
+    //    qDebug("%dms to paint to screen", benchmarkTime.elapsed());
         benchmarkTime.restart();
     }
 	// sync input with the emulation
 	m_hostInput->sync();
-    qDebug("%dms to process input", benchmarkTime.elapsed());
+    //qDebug("%dms to process input", benchmarkTime.elapsed());
 }
 
 int EmuView::determineLoadSlot(const QStringList &args)
@@ -465,6 +468,7 @@ void EmuView::update()
 {
     static int frameCounter = 0;
     qDebug("%dms since last frame", m_frameTime.elapsed());
+    m_frameTime.restart();
     //If not paused
     if(!m_running)
         return;
@@ -472,9 +476,8 @@ void EmuView::update()
     QTime benchmarkTime;
     benchmarkTime.start();
     onFrameGenerated(frameCounter == 0);
-    qDebug("%dms to update", benchmarkTime.elapsed());
+    //qDebug("%dms to update", benchmarkTime.elapsed());
 
     if (++frameCounter > m_frameSkip)
         frameCounter = 0;
-    m_frameTime.restart();
 }

@@ -32,7 +32,7 @@ EmuThread::EmuThread(Emu *emu) :
 	m_emu(emu),
 	m_running(false),
 	m_inFrameGenerated(false),
-	m_frameSkip(1)
+    m_frameSkip(0)
 {
 }
 
@@ -46,7 +46,6 @@ void EmuThread::resume()
 {
 	m_running = true;
     start(QThread::TimeCriticalPriority);
-    //start();
 }
 
 /*! Pauses the execution of the emulation. */
@@ -78,23 +77,16 @@ void EmuThread::run()
 	qreal currentFrameTime = 0;
 	int frameCounter = 0;
 	while (m_running) {
-		qreal currentTime = time.elapsed();
 		currentFrameTime += frameTime;
-//        if (currentTime < currentFrameTime && frameCounter == 0) {
+
         if (frameCounter == 0) {
-            //qDebug("%dms since last frame", emulateFrameBenchmark.elapsed());
             QTime tempTime;
             tempTime.start();
 			m_emu->emulateFrame(true);
-            qDebug("%dms to render frame", tempTime.elapsed());
             emulateFrameBenchmark.restart();
 			m_inFrameGenerated = true;
 			emit frameGenerated(true);
 			m_inFrameGenerated = false;
-
-//            qreal currentTime = time.addMSecs(5).elapsed();
-//            if (currentTime < currentFrameTime)
-//                sleepMs(qFloor(currentFrameTime - currentTime));
 		} else {
 			m_emu->emulateFrame(false);
 			emit frameGenerated(false);
