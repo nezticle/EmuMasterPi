@@ -467,7 +467,7 @@ void EmuView::hostVideoShaderChanged()
 void EmuView::update()
 {
     static int frameCounter = 0;
-    qDebug("%dms since last frame", m_frameTime.elapsed());
+    //qDebug("%dms since last frame", m_frameTime.elapsed());
     m_frameTime.restart();
     //If not paused
     if(!m_running)

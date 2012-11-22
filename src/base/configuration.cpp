@@ -70,7 +70,7 @@ void Configuration::sl()
 /*! \internal */
 void Configuration::constructDefaults()
 {
-    m_defaultData.insert("audioEnable", false);
+    m_defaultData.insert("audioEnable", true);
 	m_defaultData.insert("autoSaveLoadEnable", true);
     m_defaultData.insert("buttonsVisible", false);
     m_defaultData.insert("frameSkip", 0);
@@ -85,7 +85,8 @@ void Configuration::constructDefaults()
 	m_defaultData.insert("swipeEnable", false);
 	m_defaultData.insert("touchAreaSize", 240);
 	m_defaultData.insert("touchAreaDiagonalSize", 240/4);
-    m_defaultData.insert("videoFilter", "hq4x");
+    //m_defaultData.insert("videoFilter", "hq4x");
+    m_defaultData.insert("videoFilter", "2xSal");
 }
 
 /*!
