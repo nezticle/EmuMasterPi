@@ -1,0 +1,3 @@
+Rendering to a QWindow should be done in a second thread to avoid blocking on glSwapBuffers
+
+Audio code needs to be made safe, as we tend to segfault in cases of buffer underrun.
