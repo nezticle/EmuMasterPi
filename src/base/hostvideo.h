@@ -19,23 +19,19 @@
 class Emu;
 class HostInput;
 #include "base_global.h"
-#include <QtGui/QWindow>
+#include <QtQuick/QQuickView>
 #include <QtGui/QOpenGLContext>
 #include <QtGui/QOpenGLShaderProgram>
 #include <QtCore/QTime>
 
 #include <GLES2/gl2.h>
 
-class HostVideo : public QWindow
+class HostVideo : public QQuickView
 {
     Q_OBJECT
-
+    Q_PROPERTY(int fps READ fps NOTIFY fpsCountChanged)
 public:
-    static const int Width;
-    static const int Height;
-
-    explicit HostVideo(HostInput *hostInput,
-                       Emu *emu);
+    explicit HostVideo(HostInput *hostInput, Emu *emu);
 	~HostVideo();
 
 	bool isFpsVisible() const;
@@ -53,16 +49,16 @@ public:
 	QStringList shaderList() const;
 public slots:
     void repaint(); //called when new frame is ready
-
+    int fps() { return m_fpsCount; }
 signals:
 	void shaderChanged();
+    void fpsCountChanged();
 private slots:
 	void updateRects();
 private:
 	void paintEmuFrame();
-    void paintFps();
+    void updateFps();
 	QString shaderDir() const;
-    void setupOpenGLWindow();
 	void setupProgramList();
 	bool loadShaderProgram();
 	bool configureShaderProgram(const char *vsh, const char *fsh);
@@ -82,7 +78,6 @@ private:
 
 	bool m_keepAspectRatio;
 
-    QOpenGLContext *m_openglContext;
     QOpenGLShaderProgram *m_program;
 	int m_u_pvmMatrixLocation;
 	int m_u_displaySizeLocation;

@@ -1,7 +1,7 @@
 DESTDIR = ../../bin
 INCLUDEPATH += ..
 
-QT = core gui multimedia gamepad
+QT = core gui multimedia gamepad quick
 
 HEADERS += \
     ../base/hostaudio.h \
@@ -38,6 +38,9 @@ SOURCES += \
     ../base/memutils.cpp \
     ../base/gamepadinputdevice.cpp
 
+OTHER_FILES += \
+    ../../data/qml/main.qml
+
 linux-rasp-pi-g++ {
         target.path = /opt/apps/emumaster/bin
 
@@ -52,7 +55,9 @@ linux-rasp-pi-g++ {
         ../../data/shader/grayScale.vsh \
         ../../data/shader/grayScale.fsh \
         ../../data/shader/sharpen.vsh \
-        ../../data/shader/sharpen.fsh \
+        ../../data/shader/sharpen.fsh
+        qml.path = /opt/apps/emumaster/data/qml
+        qml.files = $$OTHER_FILES
 
-        INSTALLS += target shaders
+        INSTALLS += target shaders qml
 }

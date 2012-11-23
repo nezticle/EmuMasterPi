@@ -30,6 +30,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 #include <QtGui/QColor>
+#include <QtQml/QQmlContext>
 #include <QtCore/QDebug>
 
 EmuView::EmuView(Emu *emu, const QString &diskFileName) :
@@ -55,8 +56,9 @@ EmuView::EmuView(Emu *emu, const QString &diskFileName) :
 	m_hostInput = new HostInput(m_emu);
 	m_hostAudio = new HostAudio(m_emu);
     m_hostVideo = new HostVideo(m_hostInput, m_emu);
-	m_hostVideo->resize(HostVideo::Width, HostVideo::Height);
+    m_hostVideo->resize(640, 480);
 	m_hostVideo->installEventFilter(m_hostInput);
+    m_hostVideo->rootContext()->setContextProperty("emuView", this);
 	QObject::connect(m_hostInput, SIGNAL(quit()), SLOT(close()));
 	QObject::connect(m_hostInput, SIGNAL(pause()), SLOT(pause()));
 	QObject::connect(m_hostInput, SIGNAL(devicesChanged()),
@@ -163,7 +165,7 @@ bool EmuView::close()
 void EmuView::showEmulationView()
 {
 	if (!m_running) {
-		m_hostVideo->setVisible(true);
+        m_hostVideo->show();
 		if (m_audioEnable)
 			m_hostAudio->open();
 		resume();
@@ -226,7 +228,7 @@ void EmuView::onFrameGenerated(bool videoOn)
         benchmarkTime.restart();
     }
     if (videoOn) {
-        m_hostVideo->repaint();
+        m_hostVideo->update();
     //    qDebug("%dms to paint to screen", benchmarkTime.elapsed());
         benchmarkTime.restart();
     }

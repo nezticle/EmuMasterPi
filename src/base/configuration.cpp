@@ -70,7 +70,7 @@ void Configuration::sl()
 /*! \internal */
 void Configuration::constructDefaults()
 {
-    m_defaultData.insert("audioEnable", true);
+    m_defaultData.insert("audioEnable", false);
 	m_defaultData.insert("autoSaveLoadEnable", true);
     m_defaultData.insert("buttonsVisible", false);
     m_defaultData.insert("frameSkip", 0);
