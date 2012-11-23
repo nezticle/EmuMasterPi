@@ -1,3 +1,7 @@
 Rendering to a QWindow should be done in a second thread to avoid blocking on glSwapBuffers
 
 Audio code needs to be made safe, as we tend to segfault in cases of buffer underrun.
+
+Default window should be size of emulator, and we should have --fullscreen flag for the stretched view, or maybe a --no-scale for the opposite.
+
+Use QtQuick 2.0 to display emulator, and options/menu

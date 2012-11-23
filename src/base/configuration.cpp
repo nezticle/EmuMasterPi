@@ -86,7 +86,7 @@ void Configuration::constructDefaults()
 	m_defaultData.insert("touchAreaSize", 240);
 	m_defaultData.insert("touchAreaDiagonalSize", 240/4);
     //m_defaultData.insert("videoFilter", "hq4x");
-    m_defaultData.insert("videoFilter", "2xSal");
+    //m_defaultData.insert("videoFilter", "2xSal");
 }
 
 /*!
