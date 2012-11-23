@@ -69,11 +69,6 @@ KeybInputDevice *HostInput::keybInputDevice() const
 }
 
 /*!
-	\fn qreal HostInput::padOpacity() const
-	Returns opacity of images on touch screen.
- */
-
-/*!
 	\fn QList<HostInputDevice *> HostInput::devices() const
 	Returns a list of input devices available on host.
  */

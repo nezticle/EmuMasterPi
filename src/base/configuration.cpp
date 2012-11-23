@@ -72,21 +72,11 @@ void Configuration::constructDefaults()
 {
     m_defaultData.insert("audioEnable", false);
 	m_defaultData.insert("autoSaveLoadEnable", true);
-    m_defaultData.insert("buttonsVisible", false);
     m_defaultData.insert("frameSkip", 0);
-    m_defaultData.insert("fpsVisible", false);
-	m_defaultData.insert("gridColor", QColor(Qt::white));
-	m_defaultData.insert("gridVisible", false);
-	m_defaultData.insert("hapticFeedbackEnable", false);
+    m_defaultData.insert("fpsVisible", true);
 	m_defaultData.insert("keepAspectRatio", true);
-	m_defaultData.insert("lrButtonsVisible", false);
-	m_defaultData.insert("padOpacity", 0.45f);
 	m_defaultData.insert("runInBackground", false);
-	m_defaultData.insert("swipeEnable", false);
-	m_defaultData.insert("touchAreaSize", 240);
-	m_defaultData.insert("touchAreaDiagonalSize", 240/4);
-    //m_defaultData.insert("videoFilter", "hq4x");
-    //m_defaultData.insert("videoFilter", "2xSal");
+    m_defaultData.insert("videoFilter", "2xSal");
 }
 
 /*!

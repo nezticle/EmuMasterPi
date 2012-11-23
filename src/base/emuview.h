@@ -38,7 +38,6 @@ class EmuView : public QObject
 	Q_PROPERTY(int frameSkip READ frameSkip WRITE setFrameSkip NOTIFY frameSkipChanged)
 	Q_PROPERTY(bool audioEnable READ isAudioEnabled WRITE setAudioEnabled NOTIFY audioEnableChanged)
 	Q_PROPERTY(bool keepAspectRatio READ keepAspectRatio WRITE setKeepAspectRatio NOTIFY keepAspectRatioChanged)
-	Q_PROPERTY(bool lrButtonsVisible READ areLRButtonsVisible WRITE setLRButtonsVisible NOTIFY lrButtonsVisibleChanged)
 	Q_PROPERTY(QString error READ error CONSTANT)
 	Q_PROPERTY(QList<QObject *> inputDevices READ inputDevices NOTIFY inputDevicesChanged)
 	Q_PROPERTY(QString videoFilter READ videoFilter WRITE setVideoFilter NOTIFY videoFilterChanged)
@@ -59,9 +58,6 @@ public:
 	void setKeepAspectRatio(bool on);
 	bool keepAspectRatio() const;
 
-	void setLRButtonsVisible(bool on);
-	bool areLRButtonsVisible() const;
-
 	QList<QObject *> inputDevices() const;
 
 	QString error() const;
@@ -81,7 +77,6 @@ signals:
 	void frameSkipChanged();
 	void audioEnableChanged();
 	void keepAspectRatioChanged();
-	void lrButtonsVisibleChanged();
 	void faultOccured(QString faultMessage);
 	void inputDevicesChanged();
 	void videoFilterChanged();
@@ -131,7 +126,6 @@ private:
     QTimer m_updateTimer;
 	bool m_safetyTimerDisabled;
 	bool m_runInBackground;
-	bool m_lrButtonsVisible;
     int m_frameSkip;
     QTime m_frameTime;
 };

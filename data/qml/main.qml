@@ -9,7 +9,7 @@ Rectangle {
         anchors.top: rootItem.top
         anchors.left: rootItem.left
         anchors.margins: 5
-        //visible: emuView.fpsVisible;
+        visible: emuView.fpsVisible;
 
         color: "yellow"
         text: "fps: " + hostVideo.fps;

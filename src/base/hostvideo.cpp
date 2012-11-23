@@ -82,8 +82,6 @@ HostVideo::HostVideo(HostInput *hostInput, Emu *emu)
     setResizeMode(QQuickView::SizeRootObjectToView);
     setClearBeforeRendering(false);
     rootContext()->setContextProperty("hostVideo", this);
-    //TODO: dont hardcode location of this file
-    setSource(QUrl::fromLocalFile("/opt/apps/emumaster/data/qml/main.qml"));
 
 	QObject::connect(m_emu, SIGNAL(videoSrcRectChanged()), SLOT(updateRects()));
     QObject::connect(this, SIGNAL(widthChanged(int)), this, SLOT(updateRects()));

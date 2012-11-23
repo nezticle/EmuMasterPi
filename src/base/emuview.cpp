@@ -45,7 +45,6 @@ EmuView::EmuView(Emu *emu, const QString &diskFileName) :
 	m_autoSaveLoadEnable(true),
 	m_safetyTimerDisabled(false),
 	m_runInBackground(false),
-    m_lrButtonsVisible(false),
     m_frameSkip(0)
 {
 	Q_ASSERT(m_emu != 0);
@@ -59,6 +58,8 @@ EmuView::EmuView(Emu *emu, const QString &diskFileName) :
     m_hostVideo->resize(640, 480);
 	m_hostVideo->installEventFilter(m_hostInput);
     m_hostVideo->rootContext()->setContextProperty("emuView", this);
+    //TODO: dont hardcode location of this file
+    m_hostVideo->setSource(QUrl::fromLocalFile("/opt/apps/emumaster/data/qml/main.qml"));
 	QObject::connect(m_hostInput, SIGNAL(quit()), SLOT(close()));
 	QObject::connect(m_hostInput, SIGNAL(pause()), SLOT(pause()));
 	QObject::connect(m_hostInput, SIGNAL(devicesChanged()),
@@ -356,7 +357,6 @@ void EmuView::finishSetupConfiguration()
     m_hostVideo->setShader(loadOptionFromSettings(s, "videoFilter").toString());
 	setAudioEnabled(loadOptionFromSettings(s, "audioEnable").toBool());
 	m_runInBackground = loadOptionFromSettings(s, "runInBackground").toBool();
-	setLRButtonsVisible(loadOptionFromSettings(s, "lrButtonsVisible").toBool());
     m_hostInput->loadFromConf();
 }
 
@@ -421,22 +421,6 @@ void EmuView::setKeepAspectRatio(bool on)
 bool EmuView::keepAspectRatio() const
 {
 	return m_hostVideo->keepApsectRatio();
-}
-
-void EmuView::setLRButtonsVisible(bool on)
-{
-	if (m_lrButtonsVisible != on) {
-		if (m_emu->name() != "nes" && m_emu->name() != "amiga") {
-			m_lrButtonsVisible = on;
-			emConf.setValue("lrButtonsVisible", on);
-			emit lrButtonsVisibleChanged();
-		}
-	}
-}
-
-bool EmuView::areLRButtonsVisible() const
-{
-	return m_lrButtonsVisible;
 }
 
 void EmuView::setVideoFilter(const QString &name)
