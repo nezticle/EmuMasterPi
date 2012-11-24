@@ -10,16 +10,13 @@ HEADERS += \
     ../base/pathmanager.h \
     ../base/statelistmodel.h \
     ../base/configuration.h \
-    ../base/hostinputdevice.h \
-    ../base/keybinputdevice.h \
     ../base/crc32.h \
     ../base/emuview.h \
     ../base/emu.h \
     ../base/emuinput.h \
     ../base/stringlistproxy.h \
     ../base/audioringbuffer.h \
-    ../base/memutils.h \
-    ../base/gamepadinputdevice.h
+    ../base/memutils.h
 
 SOURCES += \
     ../base/hostaudio.cpp \
@@ -28,15 +25,12 @@ SOURCES += \
     ../base/pathmanager.cpp \
     ../base/statelistmodel.cpp \
     ../base/configuration.cpp \
-    ../base/hostinputdevice.cpp \
-    ../base/keybinputdevice.cpp \
     ../base/crc32.cpp \
     ../base/emuview.cpp \
     ../base/emu.cpp \
     ../base/emuinput.cpp \
     ../base/stringlistproxy.cpp \
-    ../base/memutils.cpp \
-    ../base/gamepadinputdevice.cpp
+    ../base/memutils.cpp
 
 OTHER_FILES += \
     ../../data/qml/main.qml \

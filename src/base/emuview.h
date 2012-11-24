@@ -39,7 +39,6 @@ class EmuView : public QObject
 	Q_PROPERTY(bool audioEnable READ isAudioEnabled WRITE setAudioEnabled NOTIFY audioEnableChanged)
 	Q_PROPERTY(bool keepAspectRatio READ keepAspectRatio WRITE setKeepAspectRatio NOTIFY keepAspectRatioChanged)
 	Q_PROPERTY(QString error READ error CONSTANT)
-	Q_PROPERTY(QList<QObject *> inputDevices READ inputDevices NOTIFY inputDevicesChanged)
 	Q_PROPERTY(QString videoFilter READ videoFilter WRITE setVideoFilter NOTIFY videoFilterChanged)
 	Q_PROPERTY(QStringList availableVideoFilters READ availableVideoFilters CONSTANT)
 public:
@@ -57,8 +56,6 @@ public:
 
 	void setKeepAspectRatio(bool on);
 	bool keepAspectRatio() const;
-
-	QList<QObject *> inputDevices() const;
 
 	QString error() const;
 
@@ -78,12 +75,10 @@ signals:
 	void audioEnableChanged();
 	void keepAspectRatioChanged();
 	void faultOccured(QString faultMessage);
-	void inputDevicesChanged();
 	void videoFilterChanged();
 
 private slots:
 	void pause();
-    //void pauseStage2();
 	void resume();
 	void onFrameGenerated(bool videoOn);
 	void onSlFailed();

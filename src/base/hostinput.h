@@ -21,6 +21,9 @@ class HostInputDevice;
 class KeybInputDevice;
 #include "base_global.h"
 #include <QtCore/QObject>
+#include <QtGamepad/QGamepadInputState>
+#include <QtGamepad/QGamepadKeyBindings>
+#include <QtGamepad/QGamepadManager>
 
 class HostInput : public QObject
 {
@@ -29,10 +32,6 @@ public:
 	explicit HostInput(Emu *emu);
 	~HostInput();
 
-	KeybInputDevice *keybInputDevice() const;
-
-	QList<HostInputDevice *> devices() const;
-
 	void sync();
 
 public slots:
@@ -40,16 +39,14 @@ public slots:
 signals:
 	void pause();
 	void quit();
-	void devicesChanged();
 protected:
 	bool eventFilter(QObject *o, QEvent *e);
 private:
-
+    void initKeymapping();
 	Emu *m_emu;
-	QList<HostInputDevice *> m_devices;
+    QGamepadInputState *m_inputState;
+    QGamepadKeyBindings *m_keybindings;
+    QGamepadManager *m_gamepadManager;
 };
-
-inline QList<HostInputDevice *> HostInput::devices() const
-{ return m_devices; }
 
 #endif // HOSTINPUT_H

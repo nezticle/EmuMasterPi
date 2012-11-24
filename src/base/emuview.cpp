@@ -324,15 +324,6 @@ void EmuView::fatalError(const QString &errorStr)
     m_error = errorStr;
 }
 
-QList<QObject *> EmuView::inputDevices() const
-{
-	QList<QObject *> ret;
-	ret.reserve(m_hostInput->devices().size());
-	foreach (HostInputDevice *dev, m_hostInput->devices())
-		ret.append(dev);
-	return ret;
-}
-
 void EmuView::onSafetyEvent()
 {
 	if (!m_safetyCheck) {
