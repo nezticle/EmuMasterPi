@@ -39,7 +39,8 @@ SOURCES += \
     ../base/gamepadinputdevice.cpp
 
 OTHER_FILES += \
-    ../../data/qml/main.qml
+    ../../data/qml/main.qml \
+    ../../data/qml/Toggle.qml
 
 linux-rasp-pi-g++ {
         target.path = /opt/apps/emumaster/bin

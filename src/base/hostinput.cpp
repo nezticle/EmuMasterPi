@@ -81,9 +81,9 @@ void HostInput::sync()
     for (int i = 0; i < m_devices.size(); i++) {
         m_devices.at(i)->sync(emuInput);
     }
-//    //check for killswitch
-//    if (emuInput->pad[0].buttons() & EmuPad::Button_Mode)
-//        emit quit();
+    //check for menu button
+    if (emuInput->pad[0].buttons() & EmuPad::Button_Mode)
+        emit pause();
 }
 
 /*! Loads function in the emulation for each input device.  */

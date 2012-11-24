@@ -70,13 +70,13 @@ void Configuration::sl()
 /*! \internal */
 void Configuration::constructDefaults()
 {
-    m_defaultData.insert("audioEnable", false);
+    m_defaultData.insert("audioEnable", true);
 	m_defaultData.insert("autoSaveLoadEnable", true);
     m_defaultData.insert("frameSkip", 0);
     m_defaultData.insert("fpsVisible", true);
 	m_defaultData.insert("keepAspectRatio", true);
 	m_defaultData.insert("runInBackground", false);
-    m_defaultData.insert("videoFilter", "2xSal");
+    //m_defaultData.insert("videoFilter", "2xSal");
 }
 
 /*!
