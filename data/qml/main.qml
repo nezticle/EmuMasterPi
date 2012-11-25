@@ -16,7 +16,7 @@ Rectangle {
     }
 
     Rectangle {
-        visible: false;
+        visible: emuView.menuVisible;
 
         anchors.centerIn: parent
         width: rootItem.width / 3;
@@ -54,7 +54,7 @@ Rectangle {
                 id: audioEnabledToggle
                 text: "Audio Enabled"
                 target: emuView
-                checked: true
+                checked: false
                 property: "audioEnable"
             }
 
@@ -67,5 +67,16 @@ Rectangle {
             }
 
         }
+        focus: true;
+
+//        Keys.onPressed: {
+//            console.log(event.key + " was pressed");
+//            event.accepted = true;
+//        }
+//        Keys.onReleased: {
+//            console.log(event.key + " was released");
+//            event.accepted = true;
+//        }
+
     }
 }

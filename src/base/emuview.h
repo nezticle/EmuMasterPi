@@ -34,6 +34,7 @@ class QSettings;
 class EmuView : public QObject
 {
 	Q_OBJECT
+    Q_PROPERTY(bool menuVisible READ isMenuVisible WRITE setMenuVisible NOTIFY menuVisibleChanged)
 	Q_PROPERTY(bool fpsVisible READ isFpsVisible WRITE setFpsVisible NOTIFY fpsVisibleChanged)
 	Q_PROPERTY(int frameSkip READ frameSkip WRITE setFrameSkip NOTIFY frameSkipChanged)
 	Q_PROPERTY(bool audioEnable READ isAudioEnabled WRITE setAudioEnabled NOTIFY audioEnableChanged)
@@ -45,6 +46,8 @@ public:
 	explicit EmuView(Emu *emu, const QString &diskFileName);
 	~EmuView();
 
+    bool isMenuVisible();
+
 	void setFpsVisible(bool on);
 	bool isFpsVisible() const;
 
@@ -55,7 +58,7 @@ public:
 	bool isAudioEnabled() const;
 
 	void setKeepAspectRatio(bool on);
-	bool keepAspectRatio() const;
+    bool keepAspectRatio() const;
 
 	QString error() const;
 
@@ -65,11 +68,13 @@ public:
 
 	void disableSafetyTimer();
 public slots:
+    void setMenuVisible(bool on);
 	bool close();
 
 	void saveScreenShot();
 	void showEmulationView();
 signals:
+    void menuVisibleChanged();
 	void fpsVisibleChanged();
 	void frameSkipChanged();
 	void audioEnableChanged();
@@ -110,8 +115,9 @@ private:
 	bool m_quit;
 	bool m_pauseRequested;
 	int m_closeTries;
-	int m_slotToBeLoadedOnStart;
+    int m_slotToBeLoadedOnStart;
 
+    bool m_menuVisible;
 	bool m_audioEnable;
 	bool m_autoSaveLoadEnable;
 	QString m_error;

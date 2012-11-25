@@ -28,22 +28,33 @@ class KeybInputDevice;
 class HostInput : public QObject
 {
 	Q_OBJECT
+    Q_PROPERTY(bool menuEnabled READ menuEnabled WRITE setMenuEnabled NOTIFY menuEnabledChanged)
 public:
-	explicit HostInput(Emu *emu);
+    explicit HostInput(Emu *emu, QWindow *window);
 	~HostInput();
 
 	void sync();
+    QGamepadKeyBindings* keybindings() { return m_keybindings; }
 
 public slots:
+    bool menuEnabled();
+    void setMenuEnabled(bool enabled);
 	void loadFromConf();
+
 signals:
-	void pause();
-	void quit();
+    void menuEnabledChanged(bool enabled);
+
+private slots:
+    void monitoredActionActivated(const QString &action);
+    void monitoredActionDeactivated(const QString &action);
+
 protected:
 	bool eventFilter(QObject *o, QEvent *e);
 private:
     void initKeymapping();
 	Emu *m_emu;
+    QWindow *m_window;
+    bool m_menuEnabled;
     QGamepadInputState *m_inputState;
     QGamepadKeyBindings *m_keybindings;
     QGamepadManager *m_gamepadManager;

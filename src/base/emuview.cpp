@@ -41,6 +41,7 @@ EmuView::EmuView(Emu *emu, const QString &diskFileName) :
 	m_quit(false),
 	m_pauseRequested(false),
 	m_slotToBeLoadedOnStart(StateListModel::InvalidSlot),
+    m_menuVisible(false),
 	m_audioEnable(true),
 	m_autoSaveLoadEnable(true),
 	m_safetyTimerDisabled(false),
@@ -52,18 +53,16 @@ EmuView::EmuView(Emu *emu, const QString &diskFileName) :
 	Configuration::setupAppInfo();
 	pathManager.setCurrentEmu(m_emu->name());
 
-	m_hostInput = new HostInput(m_emu);
 	m_hostAudio = new HostAudio(m_emu);
     m_hostVideo = new HostVideo(m_hostInput, m_emu);
+    m_hostInput = new HostInput(m_emu, m_hostVideo);
+    QObject::connect(m_hostInput, SIGNAL(menuEnabledChanged(bool)),
+                     this, SLOT(setMenuVisible(bool)));
+
     m_hostVideo->resize(640, 480);
-	m_hostVideo->installEventFilter(m_hostInput);
     m_hostVideo->rootContext()->setContextProperty("emuView", this);
     //TODO: dont hardcode location of this file
     m_hostVideo->setSource(QUrl::fromLocalFile("/opt/apps/emumaster/data/qml/main.qml"));
-	QObject::connect(m_hostInput, SIGNAL(quit()), SLOT(close()));
-	QObject::connect(m_hostInput, SIGNAL(pause()), SLOT(pause()));
-	QObject::connect(m_hostInput, SIGNAL(devicesChanged()),
-					 SIGNAL(inputDevicesChanged()));
 	QObject::connect(m_hostVideo, SIGNAL(shaderChanged()),
 					 SLOT(hostVideoShaderChanged()));
 
@@ -111,7 +110,28 @@ EmuView::~EmuView()
 	delete m_stateListModel;
 	delete m_hostVideo;
 	delete m_hostAudio;
-	delete m_hostInput;
+    delete m_hostInput;
+}
+
+void EmuView::setMenuVisible(bool on)
+{
+    if (m_menuVisible == on)
+        return;
+
+    m_menuVisible = on;
+    m_hostInput->setMenuEnabled(on);
+
+    if (m_menuVisible)
+        this->pause();
+    else
+        this->resume();
+
+    emit menuVisibleChanged();
+}
+
+bool EmuView::isMenuVisible()
+{
+    return m_menuVisible;
 }
 
 // two-stage pause preventing deadlocks
